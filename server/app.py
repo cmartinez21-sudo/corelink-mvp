@@ -4,16 +4,16 @@ import psycopg2.extras
 from flask import Flask, render_template, request, jsonify, abort
 from datetime import datetime
 
-app = Flask(__name__, template_folder="../templates")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+app = Flask(__name__, template_folder=os.path.join(BASE_DIR, "templates"))
 
 ADMIN_SECRET = os.getenv("ADMIN_SECRET", "iwc-secret-2024")
 
 # Initialize DB on startup
-with app.app_context():
-    try:
-        init_db()
-    except Exception:
-        pass
+try:
+    init_db()
+except Exception as e:
+    print(f"DB init warning: {e}")
 
 
 def get_conn():
