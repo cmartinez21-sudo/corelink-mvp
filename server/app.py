@@ -8,6 +8,13 @@ app = Flask(__name__, template_folder="../templates")
 
 ADMIN_SECRET = os.getenv("ADMIN_SECRET", "iwc-secret-2024")
 
+# Initialize DB on startup
+with app.app_context():
+    try:
+        init_db()
+    except Exception:
+        pass
+
 
 def get_conn():
     return psycopg2.connect(os.getenv("DATABASE_URL"), sslmode="require")
@@ -125,5 +132,4 @@ def dashboard():
 
 
 if __name__ == "__main__":
-    init_db()
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5050)))
